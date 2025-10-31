@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>GCP Storage 파일 업로드</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        #status { margin-top: 20px; padding: 10px; border: 1px solid #ccc; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+
+<h2>GCP Storage 파일 업로드 (Ajax)</h2>
+
+<form id="uploadForm">
+    <label for="fileInput">업로드할 파일 선택:</label><br>
+    <input type="file" id="fileInput" name="image" required><br><br>
+
+    <button type="submit">파일 업로드 시작</button>
+</form>
+
+<h3>업로드 결과</h3>
+<pre id="status">여기에 결과가 표시됩니다...</pre>
+
+<script>
+    const uploadForm = document.getElementById('uploadForm');
+    const fileInput = document.getElementById('fileInput');
+    const statusDiv = document.getElementById('status');
+
+    // 서버의 엔드포인트 URL (Express 서버가 실행 중인 주소)
+    const UPLOAD_URL = 'https://test-530490767190.asia-northeast3.run.app'; // /file
+
+    uploadForm.addEventListener('submit', async (e) => {
+        e.preventDefault(); // 폼의 기본 제출 동작 방지
+
+        statusDiv.textContent = '업로드 중... 잠시만 기다려주세요.';
+
+        const file = fileInput.files[0];
+        if (!file) {
+            statusDiv.textContent = '⚠️ 파일을 선택해주세요!';
+            return;
+        }
+
+        // FormData 객체를 생성하여 파일을 담습니다.
+        const formData = new FormData();
+        // append("필드명", 파일 객체) -> 필드명은 서버의 'image'와 일치
+        formData.append('image', file);
+
+        try {
+            // fetch API를 사용하여 비동기로 파일을 서버에 전송
+            const response = await fetch(UPLOAD_URL, {
+                method: 'POST',
+                // 파일 업로드 시에는 'Content-Type': 'multipart/form-data' 헤더를
+                // 직접 지정하지 않아야 fetch가 Boundary 값을 자동으로 설정합니다.
+                body: formData,
+            });
+
+            if (!response.ok) {
+                // HTTP 상태 코드가 200 범위가 아닐 경우 에러 처리
+                const errorText = await response.text();
+                throw new Error(`HTTP Error ${response.status}: ${errorText}`);
+            }
+
+            const result = await response.json();
+
+            // 성공 메시지 및 URL 출력
+            statusDiv.textContent = '✅ 업로드 성공!\n'
+                + JSON.stringify(result, null, 2);
+
+        } catch (error) {
+            // 네트워크 오류 또는 서버 에러 응답 처리
+            statusDiv.textContent = `❌ 업로드 실패: ${error.message}`;
+            console.error('Upload error:', error);
+        }
+    });
+</script>
+
+</body>
+</html>
