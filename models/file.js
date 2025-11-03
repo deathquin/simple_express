@@ -3,7 +3,7 @@ const { Storage } = require('@google-cloud/storage');
 const path = require('path');
 
 // 키 파일 경로를 직접 지정합니다.
-const KEY_FILE_PATH = path.join(__dirname, '../utility/nextstudio-project-69de5cca0013.json');
+const KEY_FILE_PATH = path.join(__dirname, '../utility/student10_key.json');
 
 console.log(`Upload GCP Key with ${KEY_FILE_PATH}`);
 
@@ -14,7 +14,7 @@ const storage = new Storage({
 
 
 // 업로드할 버킷 이름과 폴더 경로를 설정합니다.
-const BUCKET_NAME = 'deathquin_storage'; // 반드시 본인의 버킷 이름으로 변경하세요! YOUR_GCS_BUCKET_NAME
+const BUCKET_NAME = 'student10_bucket'; // 반드시 본인의 버킷 이름으로 변경하세요! YOUR_GCS_BUCKET_NAME
 const gcsBucket = storage.bucket(BUCKET_NAME);
 
 exports.file = {
