@@ -3,10 +3,10 @@ const mysql = require('mysql2/promise');
 
 // 데이터베이스 연결 풀(Connection Pool)을 생성합니다.
 const pool = mysql.createPool({
-    host: '34.22.68.140',  // DB 호스트 주소
-    user: 'root',        // DB 사용자 이름
-    password: "Roehd007@",          // DB 비밀번호
-    database: "userdb",              // 사용할 데이터베이스 이름
+    host: 'IP_ADDRESS',  // DB 호스트 주소
+    user: 'USER_NAME',        // DB 사용자 이름
+    password: "PASSWORD",          // DB 비밀번호
+    database: "DB",              // 사용할 데이터베이스 이름
     port: 3306,
 });
 
